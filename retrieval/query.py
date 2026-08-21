@@ -53,6 +53,7 @@ class Retriever:
             
             d_dict = {
                  "chunk_id": chunk_id,
+                 "chunk_id": meta["doc_id"],
                 "text": meta["text"],
                 "source_path": meta.get("source_path"),
                 "chunk_index": meta.get("chunk_index"),

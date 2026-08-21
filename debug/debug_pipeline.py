@@ -2,16 +2,17 @@ import sys
 from pathlib import Path
 
 
-# Add the deployment project root for direct VS Code execution.
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
 from retrieval.query import Retriever
 from reranking.cross_encoder import CrossEncoderReranker
+from llm.prompt_builder import build_prompt
 
 
 def main():
+
     query = "What is the Manhattan Project?"
 
     retriever = Retriever()
@@ -25,12 +26,16 @@ def main():
         print(chunk["text"][:300])
 
     reranker = CrossEncoderReranker()
-
     reranked_chunks = reranker.rerank(
         query,
         chunks,
         top_k=5,
     )
+
+    messages = build_prompt(query, reranked_chunks)
+
+    print("\nPROMPT MESSAGES:")
+    print(messages)
 
     print("\nRERANKED RESULTS:")
 
