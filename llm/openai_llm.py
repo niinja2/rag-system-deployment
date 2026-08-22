@@ -2,8 +2,11 @@ import os
 from openai import OpenAI
 
 class OpenAILLM:
-    def __init__(self, model="gpt-4.1-mini", temperature=0.2, max_tokens=500):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    def __init__(self, model="mistralai/mistral-small-3.1-24b-instruct", temperature=0.2, max_tokens=500):
+        self.client = OpenAI(
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url="https://openrouter.ai/api/v1",
+        )
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
