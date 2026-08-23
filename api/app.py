@@ -11,7 +11,7 @@ from pydantic import BaseModel
 # These are possible LLM backends.
 from llm.mock_llm import MockLLM
 from llm.ollama_llm import OllamaLLM
-from llm.openai_llm import OpenAILLM as OpenRouterLLM
+from llm.openai_llm import OpenRouterLLM
 
 # RAGChain is the orchestrator:
 from llm.rag_chain import RAGChain
@@ -39,6 +39,8 @@ class QueryResponse(BaseModel):
     answer: str
     sources: list[str]
     contexts: list[str]
+    model: str
+    server: str
 
 
 @lru_cache(maxsize=1)
@@ -106,6 +108,7 @@ def query_rag(request: QueryRequest):
     llm_provider = request.llm_provider
     use_reranker = request.use_reranker
 
+    llm = build_llm(llm_provider)
     rag_chain = build_rag_chain(
         llm_provider=llm_provider,
         use_reranker=use_reranker,
@@ -117,5 +120,8 @@ def query_rag(request: QueryRequest):
         retrieve_k=retrieve_k,
         min_score=min_score,
     )
+
+    result["model"] = llm.model
+    result["server"] = llm.server
 
     return result

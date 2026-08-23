@@ -1,7 +1,9 @@
 import os
 from openai import OpenAI
 
-class OpenAILLM:
+class OpenRouterLLM:
+    server = "cloud"
+
     def __init__(self, model="mistralai/mistral-small-3.1-24b-instruct", temperature=0.2, max_tokens=500):
         self.client = OpenAI(
             api_key=os.getenv("OPENROUTER_API_KEY"),
