@@ -154,7 +154,7 @@ Notes:
 - The image is about 3.5 GB (CPU-only PyTorch); the build needs additional space for its cache.
 - The embedding and reranker models are downloaded into the image at build time, so no download happens at runtime.
 - The API loads the index and both models at startup. Until it is ready, the UI shows an "API loading..." spinner.
-- In Docker use the `openrouter` or `mock` provider. The `ollama` provider expects Ollama on `localhost`, which inside a container is the container itself, so it works only when the API runs outside Docker.
+- The `ollama` provider works in Docker when Ollama is running on the host: the API container reaches it through `host.docker.internal` (set as `OLLAMA_URL` in `docker-compose.yml`). This is the Docker Desktop host address; on Linux it needs an extra host mapping.
 
 ## LLM Providers
 
@@ -170,7 +170,7 @@ To use the `ollama` provider, install [Ollama](https://ollama.com), start it, an
 ollama pull gemma4:e2b
 ```
 
-The model name is the default in `llm/ollama_llm.py`; change it there to use another local model. Larger local models answer noticeably slower on a machine without a strong GPU. The UI selects `ollama` first in its provider list, so pick `mock` or `openrouter` if Ollama is not set up.
+The model name is the default in `llm/ollama_llm.py`; change it there to use another local model. Larger local models answer noticeably slower on a machine without a strong GPU. The UI selects `mock` first in its provider list, which needs neither a key nor Ollama.
 
 ## API Usage
 

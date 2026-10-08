@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 
@@ -6,7 +8,7 @@ class OllamaLLM:
 
     def __init__(self, model="gemma4:e2b"):
         self.model = model
-        self.url = "http://localhost:11434/api/chat"
+        self.url = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
 
     def generate(self, messages):
         r = requests.post(
@@ -14,8 +16,6 @@ class OllamaLLM:
             json={"model": self.model, "messages": messages, "stream": False},
             timeout=120,
         )
-        
+
         r.raise_for_status()
         return r.json()["message"]["content"]
-
-    

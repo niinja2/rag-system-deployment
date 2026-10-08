@@ -25,7 +25,7 @@ with st.spinner("API loading..."):
         st.error("API not reachable. Check that the API is running and the data is downloaded, then refresh.")
         st.stop()
 
-llm_provider = st.selectbox("LLM Provider", ["ollama", "openrouter", "mock"])
+llm_provider = st.selectbox("LLM Provider", ["mock", "openrouter", "ollama"])
 query = st.text_input("Ask a question", placeholder="e.g. What is the capital of France?")
 
 if st.button("Submit") and query:
@@ -37,6 +37,13 @@ if st.button("Submit") and query:
             "use_reranker": True,
         },
     )
+    if not resp.ok:
+        st.error(
+            f"Request failed (HTTP {resp.status_code}). "
+            "Check that the selected provider is available."
+        )
+        st.stop()
+
     data = resp.json()
 
     st.caption(f"Model: {data['model']}  |  Server: {data['server']}")
