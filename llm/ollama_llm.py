@@ -4,7 +4,7 @@ import requests
 class OllamaLLM:
     server = "local"
 
-    def __init__(self, model="phi4-mini"):
+    def __init__(self, model="gemma4:e2b"):
         self.model = model
         self.url = "http://localhost:11434/api/chat"
 

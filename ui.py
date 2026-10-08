@@ -1,14 +1,36 @@
+import os
+import time
+
 import streamlit as st
 import requests
 
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+
+
+@st.cache_resource
+def wait_for_api():
+    for _ in range(60):
+        try:
+            requests.get(f"{API_URL}/health", timeout=1)
+            return True
+        except requests.RequestException:
+            time.sleep(2)
+    return False
+
+
 st.title("Production RAG System")
+
+with st.spinner("API loading..."):
+    if not wait_for_api():
+        st.error("API not reachable. Check that the API is running and the data is downloaded, then refresh.")
+        st.stop()
 
 llm_provider = st.selectbox("LLM Provider", ["ollama", "openrouter", "mock"])
 query = st.text_input("Ask a question", placeholder="e.g. What is the capital of France?")
 
 if st.button("Submit") and query:
     resp = requests.post(
-        "http://localhost:8000/query",
+        f"{API_URL}/query",
         json={
             "query": query,
             "llm_provider": llm_provider,

@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 # Import lru_cache so expensive objects can be created once and reused.
 from functools import lru_cache
 
@@ -22,7 +24,16 @@ from reranking.cross_encoder import CrossEncoderReranker
 # Retriever searches the FAISS vector index.
 from retrieval.query import Retriever
 
-app = FastAPI(title="Production RAG System")
+# Load the index and both models at startup, so the API accepts requests
+# only when it is ready and the first query is not slower than the rest.
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    get_retriever()
+    get_reranker()
+    yield
+
+
+app = FastAPI(title="Production RAG System", lifespan=lifespan)
 
 
 class QueryRequest(BaseModel):
