@@ -51,6 +51,7 @@ The deployment serves a 100K-document subset. The full embedding pipeline, model
 The FAISS index and passage corpus are not included in this repository. Download them from Hugging Face before running the API:
 
 ```bash
+pip install huggingface_hub
 python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='niinja2/rag-system-data', repo_type='dataset', local_dir='.')"
 ```
 
@@ -96,6 +97,7 @@ pip install -r requirements.txt
 ### 2. Download data
 
 ```bash
+pip install huggingface_hub
 python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='niinja2/rag-system-data', repo_type='dataset', local_dir='.')"
 ```
 
